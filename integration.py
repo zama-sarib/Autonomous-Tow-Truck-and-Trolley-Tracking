@@ -7,7 +7,7 @@ import scipy
 
 
 dataset_params = {
-    'classes': ['Trolley']
+    'classes': ['Trolley','Person']
 }
 
 best_model = models.get('yolo_nas_l',
