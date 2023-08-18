@@ -10,6 +10,7 @@ dataset_params = {
     'classes': ['Trolley','Person']
 }
 
+
 best_model = models.get('yolo_nas_l',
                         num_classes=len(dataset_params['classes']),
                         checkpoint_path="/content/checkpoints/my_first_yolonas_run/ckpt_latest.pth")
@@ -76,45 +77,16 @@ while True:
         trolley_coord = getTrolleyCoords(images_predictions)
         person_coord = getPersonCoords(images_predictions)
                 
-        distance_array = scipy.spatial.distance.cdist(trolley_coord,person_coord)[0]
-        indices = np.where(distance_array <= 0.5)[0]
+        distance_array = scipy.spatial.distance.cdist(trolley_coord,person_coord)
+        indices = np.where(((distance_array[:,[0,1]] <= [1.5,1.0]) | (distance_array[:,[0,1]] <= [1.0,1.5])).all(1))
         
-        if indices.shape[0] > 1:
-            # indices = indices[0]
-            # if distance_array[indices] <= 0.5: # Threhold is set to 0.5
-            
-            pass # #Threshold let say is 0.5 unit distance trigger the stop module.
-                
-                    
-                
-                
-                
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+        if len(indices) > 1:            
+            pass 
+            #Threshold let say is 0.5 unit distance trigger the stop module.
+        
+
     
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break  
 
-        
-pipeline.stop()
 cv2.destroyAllWindows()
