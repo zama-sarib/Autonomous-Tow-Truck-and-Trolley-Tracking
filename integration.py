@@ -4,7 +4,14 @@ import cv2
 import torch
 from super_gradients.training import models
 import scipy
+import requests
 
+
+
+inputDict = {
+    "Vehicle_ID" : "",
+    "Command" : ""        
+}
 
 dataset_params = {
     'classes': ['Trolley','Person']
@@ -20,73 +27,144 @@ cap = cv2.VideoCapture(0)
 width,height = 416,416
 
 
+def getCoords(images_predictions):
+    '''
+    This function returns the midpoint Person and Trolley coords detected in the frame.
+    '''
 
-def getTrolleyCoords(images_predictions):
-    '''
-    This function returns the trolley coords detected in the frame.
-    '''
-    
-    coords = []
-    for image_prediction in images_predictions:
-        
+    Person_coords = []
+    trolley_coords = []
+    for i,image_prediction in enumerate(images_predictions):
+
         labels = image_prediction.prediction.labels
         confidence = image_prediction.prediction.confidence
         bboxes = image_prediction.prediction.bboxes_xyxy
-        
-        if labels[0] == 0 and confidence[0] >= 0.8: # 0 --> Trolley class
-            mid_x = ((bboxes[0][1]+bboxes[0][3])/2)
-            mid_y = ((bboxes[0][0]+bboxes[0][2])/2)
-            coords.append([mid_x,mid_y])
-        
-        coords = np.array(coords)
-    
-    return coords
+
+    for i in range(len(labels)):
+        if labels[i] == 0.0: # 0 --> Trolley class
+            trolley_coords.append(bboxes[i])
+
+        elif labels[i] == 1.0: # 0 --> Person class
+            Person_coords.append(bboxes[i])
+
+    trolley_coords = np.array(trolley_coords)
+    Person_coords = np.array(Person_coords)
+
+    return trolley_coords,Person_coords
 
 
-def getPersonCoords(images_predictions):
+
+def isPersonLeft(person,trolley_coords):
     '''
-    This function returns the Person coords detected in the frame.
+    This Function evaluates whether the person is on the left of the trolley
     '''
     
-    coords = []
-    for image_prediction in images_predictions:
-        
-        labels = image_prediction.prediction.labels
-        confidence = image_prediction.prediction.confidence
-        bboxes = image_prediction.prediction.bboxes_xyxy
-        
-        if labels[0] == 1 and confidence[0] >= 0.8: # 0 --> Trolley class
-            mid_x = ((bboxes[0][1]+bboxes[0][3])/2)
-            mid_y = ((bboxes[0][0]+bboxes[0][2])/2)
-            coords.append([mid_x,mid_y])
-        
-        coords = np.array(coords)
+    x2_person = person[2]
+    boolean = True
+    for eachCoord in trolley_coords:
+        if x2_person < eachCoord[2]:
+            pass
+        else:
+            boolean = False
+    return boolean
+
+
+
+def isPersonRight(person,trolley_coords):
+    '''
+    This Function evaluates whether the person is on the right of the trolley
+    '''
     
-    return coords
+    x1_person = person[0]
+    boolean = True
+    for eachCoord in trolley_coords:
+        if x1_person > eachCoord[0]:
+            pass
+        else:
+            boolean = False
+    return boolean
+
+
+
+def getLeftMinDistance(person,trolley_coords):
+    '''
+    This Function evaluates the minimum distance between the person and the nearest right trolley
+    '''
     
+    minDistance = 1e9
+    for eachCoord in trolley_coords:
+        minDistance = min(minDistance,eachCoord[0]-person[2])
     
+    return minDistance
+
+
+
+def getRightMinDistance(person,trolley_coords):
+    '''
+    This Function evaluates the minimum distance between the person and the nearest left trolley
+    '''
     
+    minDistance = 1e9
+    for eachCoord in trolley_coords:
+        minDistance = min(minDistance,person[0]-eachCoord[2])
+    
+    return minDistance
+
+
+
+def start_processing():    
+    '''
+    This function start the video capture and passes it to DL model.
+    '''
+    device = 0 if torch.cuda.is_available() else "cpu"
+    while True:
+        success,frame = cap.read()
+        img = cv2.resize(frame,(width, height))
         
-while True:
-    success,frame = cap.read()
-    img = cv2.resize(frame,(width, height))
-    
-    if success:    
-        images_predictions = best_model.predict(img,iou=0.7, conf=0.8)
-        
-        trolley_coord = getTrolleyCoords(images_predictions)
-        person_coord = getPersonCoords(images_predictions)
+        if success:    
+            images_predictions = best_model.to(device).predict(img,iou=0.7, conf=0.7)
+            trolley_coord,person_coord = getCoords(images_predictions)
+            
+            for person in person_coord:
+                leftResponse = isPersonLeft(person,trolley_coord)
+                rightResponse = isPersonRight(person,trolley_coord)
                 
-        distance_array = scipy.spatial.distance.cdist(trolley_coord,person_coord)
-        indices = np.where(((distance_array[:,[0,1]] <= [1.5,1.0]) | (distance_array[:,[0,1]] <= [1.0,1.5])).all(1))
-        
-        if len(indices) > 1:            
-            pass 
-            #Threshold let say is 0.5 unit distance trigger the stop module.
-        
+                possibleDanger = False
+                MinDistance = 1e9
 
+                if leftResponse == True and rightResponse == True:
+                    possibleDanger = False
+                elif leftResponse == True and rightResponse == False:
+                    possibleDanger = True
+                else:
+                    possibleDanger = True
+                
+                if possibleDanger:
+                    if leftResponse:
+                        MinDistance = getLeftMinDistance(person,trolley_coord)
+                    else:
+                        MinDistance = getRightMinDistance(person,trolley_coord)
+
+                                
+        
+            
+            if MinDistance < 100:             
+                #Threshold let say is 200 unit distance triggers the stop module.
+                endpoint = f'https://127.0.0.1:1003/emergencyStop'
+                response = requests.post(endpoint,params=inputDict)
+
+
+        
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break  
+
+    cv2.destroyAllWindows()
     
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break  
+    
+    
 
-cv2.destroyAllWindows()
+if __name__ == '__main__':
+    start_processing()
+    
+    
+# lan hub
