@@ -5,6 +5,8 @@ import torch
 from super_gradients.training import models
 import scipy
 import requests
+import os
+os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
 
 
 
@@ -20,10 +22,10 @@ dataset_params = {
 
 best_model = models.get('yolo_nas_l',
                         num_classes=len(dataset_params['classes']),
-                        checkpoint_path="/content/checkpoints/my_first_yolonas_run/ckpt_latest.pth")
+                        checkpoint_path=r"C:\Users\samri\Desktop\Realsense CV\trolley\ckpt_best.pth")
     
     
-cap = cv2.VideoCapture(0)      
+cap = cv2.VideoCapture(r"C:\Users\samri\Downloads\RealSense Video Feed 11 July.mp4")      
 width,height = 416,416
 
 
@@ -117,12 +119,19 @@ def start_processing():
     This function start the video capture and passes it to DL model.
     '''
     device = 0 if torch.cuda.is_available() else "cpu"
+    # print(device)
+    # while cap.isOpened():
     while True:
         success,frame = cap.read()
         img = cv2.resize(frame,(width, height))
         
         if success:    
             images_predictions = best_model.to(device).predict(img,iou=0.7, conf=0.7)
+            # images_predictions.show()
+
+            for i,predicted_frame in enumerate(images_predictions):
+                frame = predicted_frame.draw()
+                cv2.imshow("frame",frame)
             trolley_coord,person_coord = getCoords(images_predictions)
             
             for person in person_coord:
@@ -134,10 +143,13 @@ def start_processing():
 
                 if leftResponse == True and rightResponse == True:
                     possibleDanger = False
+                    print("Middle")
                 elif leftResponse == True and rightResponse == False:
                     possibleDanger = True
+                    print("Left")
                 else:
                     possibleDanger = True
+                    print("Right")
                 
                 if possibleDanger:
                     if leftResponse:
@@ -146,25 +158,79 @@ def start_processing():
                         MinDistance = getRightMinDistance(person,trolley_coord)
 
                                 
-        
+                print(MinDistance)
             
-            if MinDistance < 100:             
+            # if MinDistance < 100:             
                 #Threshold let say is 200 unit distance triggers the stop module.
-                endpoint = f'https://127.0.0.1:1003/emergencyStop'
-                response = requests.post(endpoint,params=inputDict)
+                # endpoint = f'https://127.0.0.1:1003/emergencyStop'
+                # response = requests.post(endpoint,params=inputDict)
 
+            # cv2.imshow('video',img)
+        if cv2.waitKey(1000) & 0xFF == ord('q'):
+            break 
+ 
+    cap.release()
 
-        
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break  
-
-    cv2.destroyAllWindows()
+cv2.destroyAllWindows()
     
     
     
 
 if __name__ == '__main__':
-    start_processing()
+    # start_processing()
+    device = 0 if torch.cuda.is_available() else "cpu"
+    test_img = r"C:\Users\samri\Desktop\Realsense CV\trolley\DataSet\Train\Images\64.jpg"
+    img = cv2.imread(test_img)
+    # cv2.imshow("image", img)
+    # images_predictions =  best_model.predict(img,iou=0.7,conf=0.7)  
+    # images_predictions.show()
+    # cv2.waitKey(0)
+    images_predictions = best_model.to(device).predict(img,iou=0.7, conf=0.7)
+            # images_predictions.show()
+
     
+    trolley_coord,person_coord = getCoords(images_predictions)
+    
+    for person in person_coord:
+        leftResponse = isPersonLeft(person,trolley_coord)
+        rightResponse = isPersonRight(person,trolley_coord)
+        
+        possibleDanger = False
+        MinDistance = 1e9
+
+        if leftResponse == True and rightResponse == True:
+            possibleDanger = False
+            print("Middle")
+        elif leftResponse == True and rightResponse == False:
+            possibleDanger = True
+            print("Left")
+        else:
+            possibleDanger = True
+            print("Right")
+        
+        if possibleDanger:
+            if leftResponse:
+                MinDistance = getLeftMinDistance(person,trolley_coord)
+            else:
+                MinDistance = getRightMinDistance(person,trolley_coord)
+
+                        
+        print(f"Mindistance: {MinDistance}")
+    
+            # if MinDistance < 100:             
+                #Threshold let say is 200 unit distance triggers the stop module.
+                # endpoint = f'https://127.0.0.1:1003/emergencyStop'
+                # response = requests.post(endpoint,params=inputDict)
+
+            # cv2.imshow('video',img)
+        
+    for i,predicted_frame in enumerate(images_predictions):
+        frame = predicted_frame.draw()
+        cnt = np.count_nonzero(predicted_frame.prediction.labels == 0.0)
+        cv2.putText(frame,str(cnt),(50,50),cv2.FONT_HERSHEY_SIMPLEX,1.0,(0,0,225),3)
+        cv2.imshow("frame",frame)
+        
+
+    cv2.waitKey(0); cv2.destroyAllWindows(); cv2.waitKey(1)
     
 # lan hub
