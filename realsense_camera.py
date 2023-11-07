@@ -12,7 +12,7 @@ import time
 receiver_ip = '192.168.0.4'  # IP address of the receiver machine
 receiver_port = 5001  # Port on which the receiver machine is listening
 api = 'status_depth_d435i'
-stop_threshold = 1.5
+distance_threshold = 1.5
 
 # Initialize the parameters
 confThreshold = 0.5
@@ -59,7 +59,7 @@ pipeline.start(config)
 if __name__ == "__main__":
     start_time = time.time()
 # FPS update time in seconds
-    display_time = 2
+    display_time = 0
     fc = 0
     FPS = 0
     try:
@@ -89,13 +89,13 @@ if __name__ == "__main__":
                     x_mid = (bboxes[0] + bboxes[2]) / 2
                     y_mid = (bboxes[1] + bboxes[3]) / 2
                     zDepth = depth_frame.get_distance(int(x_mid),int(y_mid))
-                    if(zDepth < distance_threshold):
+                    if zDepth < distance_threshold:
                         stop_cmd = True
-        		 break
-        	     cv2.circle(annotated_frame,(int(x_mid),int(y_mid)),2,(255, 0, 0),2)
-	             print(f"Distance to Object: {zDepth}")
-	    images = np.hstack((annotated_frame, depth_colormap))
-            # Show images
+                        break
+                    cv2.circle(annotated_frame,(int(x_mid),int(y_mid)),2,(255, 0, 0),2)
+                    print(f"Distance to Object: {zDepth}")
+            
+            images = np.hstack((annotated_frame, depth_colormap))
             fc+=2
             TIME = time.time() - start_time
             if(stop_cmd ==True):
