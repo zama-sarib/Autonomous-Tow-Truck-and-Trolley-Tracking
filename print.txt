@@ -1,0 +1,235 @@
+    1  lsusb
+    2  lsb_release -a
+    3  ls
+    4  cp se70_mcu_35.1.0_0.0.16_arm64.deb /opt/
+    5  cd Downloads/
+    6  sudo cp se70_mcu_35.1.0_0.0.16_arm64.deb /opt/
+    7  cd ~
+    8  cd /opt/
+    9  ls
+   10  sudo dpkg -i se70_mcu_35.1.0_0.0.16_arm64.deb 
+   11  sudo apt install nvidia jetpack
+   12  sudo apt install nvidia-jetpack
+   13  pip3 list
+   14  python3
+   15  quiot()
+   16  cd ~
+   17  python --version
+   18  python3 --version
+   19  python
+   20  pip3 list
+   21  sudo apt-cache show nvidia-jetpack
+   22  ls
+   23  cd Downloads/
+   24  wget https://nvidia.box.com/shared/static/p57jwntv436lfrd78inwl7iml6p13fzh.whl -O torch-1.13.0a0+d0d6b1f2.nv22.10-cp38-cp38-linux_aarch64.whl
+   25  sudo apt-get install python3-pip libopenblas-base libopenmpi-dev libomp-dev
+   26  pip3 install Cython<3
+   27  pip3 install Cython
+   28  ls
+   29  pip3 install numpy torch-1.13.0a0+d0d6b1f2.nv22.10-cp38-cp38-linux_aarch64.whl
+   30  python3
+   31  pip3 install numpy==1.19.4
+   32  python3
+   33  pytho3
+   34  python
+   35  pip3 list
+   36  python3
+   37  ls
+   38  pip3 install torch-1.13.0a0+d0d6b1f2.nv22.10-cp38-cp38-linux_aarch64.whl
+   39  sudo ltconfig
+   40  sudo ldconfig
+   41  python3
+   42  cd ~
+   43  cd Desktop/
+   44  sudo apt install libcudnn8-deb
+   45  sudo apt install libcudnn8-dev
+   46  python3
+   47  cd ~
+   48  cd Downloads/
+   49  ; pip3 install --force torch-1.13.0a0+d0d6b1f2.nv22.10-cp38-cp38-linux_aarch64.whl 
+   50  pip3 install --force torch-1.13.0a0+d0d6b1f2.nv22.10-cp38-cp38-linux_aarch64.whl 
+   51  python3
+   52  pip3 install --force torch-1.13.0a0+d0d6b1f2.nv22.10-cp38-cp38-linux_aarch64.whl  torchvision==0.13.0
+   53  python2
+   54  python3
+   55  pip3 list
+   56  pip3 uninstall torch
+   57  pip3 instal torch-1.13.0a0+d0d6b1f2.nv22.10-cp38-cp38-linux_aarch64.whl 
+   58  pip3 install torch-1.13.0a0+d0d6b1f2.nv22.10-cp38-cp38-linux_aarch64.whl 
+   59  pip3 uninstall torch
+   60  pip3 install ./torch-1.13.0a0+d0d6b1f2.nv22.10-cp38-cp38-linux_aarch64.whl 
+   61  pip3 uninstall torch
+   62  pip3 install --force ./torch-1.13.0a0+d0d6b1f2.nv22.10-cp38-cp38-linux_aarch64.whl 
+   63  python3
+   64  pip3 uninstall torch torchvision torchaudio
+   65  pip3 install torch-1.13.0a0+d0d6b1f2.nv22.10-cp38-cp38-linux_aarch64.whl torchvision==0.13.0 torchaudio==0.13.0
+   66  python3
+   67  pip3 list
+   68  cd /usr/src/cudnn_samples_v8/conv_sample/
+   69  $ sudo make
+   70  cd /usr/src/cudnn_samples_v8/conv_sample/
+   71  apt show nvidia-jetpack
+   72  cd ~
+   73  sudo apt-get install nvidia-smi
+   74  nvidia-smi
+   75  $ /usr/local/cuda-8.0/bin/cuda-install-samples-8.0.sh .
+   76  /usr/local/cuda-8.0/bin/cuda-install-samples-8.0.sh .
+   77  dpkg -l | grep cuda
+   78  cd ~
+   79  cd Desktop/
+   80  python3 realsense_camera.py 
+   81  python3
+   82  gedit realsense_camera.py 
+   83  python3 realsense_camera.py 
+   84  python3
+   85  python3 -m pip install upgrade pip
+   86  python -m pip install upgrade pip
+   87  python -m pip install --upgrade pip
+   88  python -m pip install virtualenv
+   89  python3 -m pip virtualenv my_env
+   90  python3 -m virtualenv my_env
+   91  ls
+   92  source my_env/bin/activate
+   93  pip3 list
+   94  cd ..
+   95  cd ~
+   96  cd Downloads/
+   97  ls
+   98  pip3 install torch-1.13.0a0+d0d6b1f2.nv22.10-cp38-cp38-linux_aarch64.whl 
+   99  python3
+  100  pip3 install torchvision==0.13.0
+  101  pip3 install torchaudio==0.13.0
+  102  python3
+  103  pip3 list
+  104  pip list
+  105  python3 --version
+  106  sudo apt update
+  107  sudo apt install python3-pip
+  108  pip3 --version
+  109  pip3 install pyrealsense2
+  110  python3
+  111  cd Desktop/
+  112  touch realsense_camera.py
+  113  gedit realsense_camera.py 
+  114  python3 realsense_camera.py 
+  115  gedit realsense_camera.py 
+  116  python3 realsense_camera.py 
+  117  pip3 install opencv-python
+  118  python3 realsense_camera.py 
+  119  gedit realsense_camera.py 
+  120  python3 realsense_camera.py 
+  121  pip3 install ultralytics
+  122  pip remove torch
+  123  pip uninstall torch
+  124  python
+  125  pip uninstall torchvision torchaudio
+  126  sudo apt update
+  127  cd Desktop/
+  128  l
+  129  \ls
+  130  ls
+  131  python3
+  132  cd ~
+  133  cd Downloads/
+  134  ls
+  135  pip3 list
+  136  pip3 uninstall torch
+  137  sudo apt-get install libopenblas-base libopenmpi-dev
+  138  ls
+  139  pip3 install ./torch-1.13.0a0+d0d6b1f2.nv22.10-cp38-cp38-linux_aarch64.whl 
+  140  python3
+  141  sudo apt-get install libopenblas-base libopenmpi-dev
+  142  python
+  143  ls
+  144  sudo apt install ./teamviewer-host_15.47.3_arm64.deb 
+  145  ls
+  146  python3
+  147  udo dpkg --remove --force-all libopenmpi-dev
+  148  sudo dpkg --remove --force-all libopenmpi-dev
+  149  sudo apt install libopenmpi-dev
+  150  python3
+  151  cd ~
+  152  cd Desktop/
+  153  cd my_env/
+  154  ls
+  155  source bin/activate
+  156  cd ..
+  157  pip3 list
+  158  sudo apt-get install libopenblas-base libopenmpi-dev
+  159  python3
+  160  python3.8
+  161  python
+  162  LD_PRELOAD=/usr/lib/libmpi_cxx.so python
+  163  python setup.py clean
+  164  python
+  165  source /home/infy/Desktop/my_env/bin/activate
+  166  cd torchvision/
+  167  cd ..
+  168  python
+  169  pip unistall torchvision
+  170  pip uninstall torchvision
+  171  python3 setup.py install
+  172  cd ~
+  173  cd Desktop/
+  174  cd Autonomous-Tow-Truck-and-Trolley-Tracking/
+  175  ls
+  176  python webcam.py 
+  177  cd 
+  178  sudo apt update
+  179  uname -mrs
+  180  sudo lshw -C display
+  181  pip uninstall torch torchvision torchaudio
+  182  cd Downloads/
+  183  cd ../Desktop/
+  184  source /my_env/bin/activate
+  185  ls
+  186  source my_env/bin/activate
+  187  python
+  188  pip uninstall torch torchvision torchaudio
+  189  cd ../Downloads/
+  190  pip install torch-1.13.0a0+d0d6b1f2.nv22.10-cp38-cp38-linux_aarch64.whl torchvision==0.13.0 torchaudio==0.13.0
+  191  python
+  192  pip install ultralytics
+  193  cd ~
+  194  cd Desktop/
+  195  git clone https://github.com/zama-sarib/Autonomous-Tow-Truck-and-Trolley-Tracking.git
+  196  ls
+  197  cd Autonomous-Tow-Truck-and-Trolley-Tracking/
+  198  ls
+  199  gedit webcam.py 
+  200  python webcam.py 
+  201  ls
+  202  gedit webcam.py 
+  203  python webcam.py 
+  204  pip3 list
+  205  gedit webcam.py 
+  206  python webcam.py 
+  207  pip3 list
+  208  pip install pyrealsense2
+  209  cd ..
+  210  ls
+  211  python realsense_camera.py 
+  212  python webcam.py 
+  213  cd Autonomous-Tow-Truck-and-Trolley-Tracking/
+  214  ls
+  215  pytho
+  216  gedit webcam.py 
+  217  pip uninstall torchvision torchaudio
+  218  ls
+  219  cd ~
+  220  cd Desktop/
+  221  gedit realsense_camera.py 
+  222  cd Autonomous-Tow-Truck-and-Trolley-Tracking/
+  223  gedit webcam.py 
+  224  ls
+  225  gedit webcam.py 
+  226  python webcam.py 
+  227  ls
+  228  cd Desktop/
+  229  source my_env/bin/activate
+  230  python realsense_camera.py 
+  231  ping 192.168.0.4
+  232  python realsense_camera.py 
+  233  history
+  234  cat ~/.bash_history
+  235  history > print.txt

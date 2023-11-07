@@ -9,11 +9,11 @@ from ultralytics import YOLO
 import requests
 import time
 
-
 receiver_ip = '192.168.0.4'  # IP address of the receiver machine
 receiver_port = 5001  # Port on which the receiver machine is listening
 api = 'status_depth_d435i'
-stop_threshold = 1.5
+distance_threshold = 1.5
+stop_cmd = False
 
 # Initialize the parameters
 confThreshold = 0.5
@@ -26,6 +26,9 @@ model = YOLO('yolov8n.pt')
 device1 = 0 if torch.cuda.is_available else 'cpu'
 print(torch.cuda.get_device_name())
 print(device1)
+model.conf = 0.55  # confidence threshold (0-1)
+model.iou = 0.45  # NMS IoU threshold (0-1)  
+
 
 # Configure depth and color streams
 pipeline = rs.pipeline()
@@ -60,7 +63,7 @@ pipeline.start(config)
 if __name__ == "__main__":
     start_time = time.time()
 # FPS update time in seconds
-    display_time = 2
+    display_time = 0
     fc = 0
     FPS = 0
     try:
@@ -83,29 +86,29 @@ if __name__ == "__main__":
                                                  interpolation=cv2.INTER_AREA)
                 print(type(color_image),color_image.shape)
                 
-            result = model.to(device1).predict(color_image,conf=0.5)
+            result = model.to(device1)(color_image)
             annotated_frame = result[0].plot()
             stop_cmd = False
             for r in result:
                 for bboxes in r.boxes.xyxy:
                     x_mid = (bboxes[0] + bboxes[2]) / 2
                     y_mid = (bboxes[1] + bboxes[3]) / 2
+                    cv2.circle(annotated_frame,(int(x_mid),int(y_mid)),2,(255, 0, 0),2)
                     zDepth = depth_frame.get_distance(int(x_mid),int(y_mid))
-                    if(zDepth < stop_threshold):
+                    print(f"Distance to Object: {zDepth}")
+                    if zDepth < distance_threshold:
                         stop_cmd = True
                         break
-                    cv2.circle(annotated_frame,(int(x_mid),int(y_mid)),2,(255, 0, 0),2)
-                    print(f"Distance to Object: {zDepth}")
-            try:
-                response = requests.post(f'http://{receiver_ip}:{receiver_port}/{api}', data={'data': stop_cmd})
-                print(response.text)
-            except:
-                print("An error occurred while sending the request")  
-        		    
+                    
+            
             images = np.hstack((annotated_frame, depth_colormap))
-            # Show images
             fc+=2
             TIME = time.time() - start_time
+            if(stop_cmd ==True):
+                print(f"****************************************The object is ver close *****************************************")
+                # pass
+                # Call the API
+		
             if (TIME) >= display_time :
                 FPS = fc / (TIME)
                 fc = 0
